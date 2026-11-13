@@ -1,0 +1,72 @@
+{
+  "id": "thanhdevapp.agmon-officer",
+  "name": "Virtual Office",
+  "version": "1.0.0",
+  "publisher": "thanhdevapp",
+  "description": "2D PixiJS Virtual Office with animated AI agent desks, subagent companion drones, pets, skins, floor themes and fullscreen Chill Mode.",
+  "entry": "index.html",
+  "sandbox": {
+    "type": "iframe-opaque-origin",
+    "attributes": "allow-scripts",
+    "allowSameOrigin": false
+  },
+  "activationEvents": [
+    "onView:canvas",
+    "onCommand:virtualOffice.open",
+    "onCommand:virtualOffice.toggleChillMode"
+  ],
+  "permissions": [
+    "traces:subscribe",
+    "workbench:openSession",
+    "storage:pluginScope",
+    "theme:subscribe"
+  ],
+  "contributes": {
+    "activityBar": [
+      {
+        "id": "virtual-office",
+        "title": "Virtual Office",
+        "icon": "Bot",
+        "command": "virtualOffice.open"
+      }
+    ],
+    "editorTabs": [
+      {
+        "id": "canvas",
+        "title": "Virtual Office",
+        "type": "canvas",
+        "icon": "Bot",
+        "closable": true
+      }
+    ],
+    "commands": [
+      {
+        "command": "virtualOffice.open",
+        "title": "Open Virtual Office",
+        "category": "Virtual Office"
+      },
+      {
+        "command": "virtualOffice.toggleChillMode",
+        "title": "Toggle Virtual Office Chill Mode (Full Screen)",
+        "shortcut": "Shift+F",
+        "category": "Virtual Office"
+      }
+    ],
+    "menus": {
+      "titlebar/file": [
+        {
+          "command": "virtualOffice.open",
+          "group": "plugins"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "virtualOffice.open"
+        },
+        {
+          "command": "virtualOffice.toggleChillMode"
+        }
+      ]
+    }
+  }
+}

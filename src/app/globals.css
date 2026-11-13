@@ -1,0 +1,1371 @@
+@import "tailwindcss";
+
+/* The Capacitor bundle starts in mobile-shell/, so Tailwind's automatic source
+   detection does not reach shared workspace components from this stylesheet. */
+@source "../components/mobile";
+@source "../components/chat";
+@source "../components/ui";
+@source "../components/sidebar";
+@source "../components/common";
+
+@theme {
+  --font-sans: var(--font-family-ui);
+  --font-mono: var(--font-family-ui);
+  --font-ui: var(--font-family-ui);
+  --font-code: var(--font-family-mono);
+}
+
+:root {
+  color-scheme: dark;
+  --font-family-ui: "Geist", "Geist Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-family-mono: "Geist Mono", "JetBrains Mono", "Cascadia Code", "Roboto Mono", Monaco, Consolas, "Liberation Mono", monospace;
+  --font-sans: var(--font-family-ui);
+  --font-mono: var(--font-family-ui);
+  --font-ui: var(--font-family-ui);
+  --font-code: var(--font-family-mono);
+  --font-size-ui: 13px;
+  --font-size-base: 13px;
+  --font-size-toolbar: 12px;
+  --font-size-sidebar: 13px;
+  --font-size-editor: 13px;
+  --font-size-terminal: 13px;
+  --font-size-chat: 13px;
+
+  /* Default Theme: Vercel Geist Monochrome (Pure Matte Zinc Hierarchy) */
+  --bg-workbench: #09090b;
+  --bg-editor: #0c0c0e;
+  --bg-sidebar: #111114;
+  --bg-activitybar: #09090b;
+  --bg-titlebar: #0c0c0e;
+  --bg-statusbar: #09090b;
+  --bg-card: #18181b;
+  --bg-card-inner: #121215;
+  --bg-hover: #222226;
+  --bg-selection: #303036;
+  --border-subtle: #222225;
+  --border-card: #2c2c30;
+  --border-focus: #a1a1aa;
+
+  /* Floating and active layers. Aliased rather than given their own value so they
+     track every theme automatically:
+       elevated — a surface that sits above the editor (toast, title-bar dropdown)
+       panel    — a popup anchored to a control (date range picker)
+       selected — the active row or tab strip inside a card or modal */
+  --bg-elevated: var(--bg-card);
+  --bg-panel: var(--bg-card);
+  --bg-selected: var(--bg-selection);
+  --accent-primary: #ededef;
+  --accent-hover: #d4d4d8;
+  --accent-secondary: #a1a1aa;
+  --text-main: #d4d4d8;
+  --text-muted: #71717a;
+  --text-bright: #fafafa;
+  --text-on-accent: #09090b;
+  /* Secondary text is the muted level, aliased rather than given its own value so
+     it tracks every theme. An imported VS Code theme overrides this token with its
+     own secondary foreground; the alias is only the fallback for the built-in themes. */
+  --text-secondary: var(--text-muted);
+
+  /* Dimmed ink for placeholders and empty-state hints. Aliased to the muted level so
+     it follows the active theme without carrying a second value to keep in sync. */
+  --text-dim: var(--text-muted);
+
+  /* Semantic Status & Badge Tokens */
+  --status-running: #3fb984;
+  --status-running-bg: rgba(63, 185, 132, 0.12);
+  --status-running-border: rgba(63, 185, 132, 0.28);
+  --status-warning: #d99b26;
+  --status-warning-bg: rgba(217, 155, 38, 0.12);
+  --status-warning-border: rgba(217, 155, 38, 0.28);
+  --status-error: #e5534b;
+  --status-error-bg: rgba(229, 83, 75, 0.12);
+  --status-error-border: rgba(229, 83, 75, 0.28);
+  --status-idle: #6e7681;
+  --status-idle-bg: rgba(110, 118, 129, 0.12);
+
+  /* File Explorer Git Decoration Tokens (Dark default) */
+  --git-decoration-added: #81b88b;
+  --git-decoration-modified: #e2c08d;
+  --git-decoration-deleted: #c74e39;
+  --git-decoration-renamed: #73c991;
+  --git-decoration-untracked: #73c991;
+  --git-decoration-copied: #73c991;
+  --git-decoration-ignored: #6e6e6e;
+
+  /* Chat Semantics (Clean neutral surfaces, zero neon glow) */
+  --bg-chat-user: #18181b;
+  --border-chat-user: #2c2c30;
+  --text-chat-user: #a1a1aa;
+  --text-chat-user-body: #fafafa;
+  --bg-chat-agent: #121215;
+  --border-chat-agent: #222225;
+  --bg-chat-tool: #0d0d10;
+  --border-chat-tool: #202023;
+  --bg-chat-code: #09090b;
+  --text-chat-code: #e4e4e7;
+  --bg-input: #141417;
+
+  /* Destructive / validation (independent of accent so it stays alarming) */
+  --danger: #f0616f;
+  --danger-bg: #f0616f1f;
+  --danger-border: #f0616f47;
+
+  /* Image canvas — the transparency checkerboard behind assets. Kept as its own
+     pair so both tones move together with the theme instead of one going muddy. */
+  --canvas-backdrop: #121212;
+  --canvas-checker: #1f1f1f;
+
+  /* Informational — AI copilot badges, help links. Distinct from the accent so a
+     "machine is helping you" cue never reads as "this is the primary action". */
+  --info: #3b82f6;
+  --info-bg: #3b82f626;
+  --info-bg-hover: #3b82f640;
+  --info-border: #3b82f64d;
+
+  /* Feature accents — one hue per workspace surface, so a grid of launchers can be
+     told apart at a glance without reading their labels. These are identity colours
+     rather than theme neutrals, so each keeps its own literal instead of aliasing
+     an existing token. */
+  --feature-office: #8b5cf6;
+  --feature-workspace: #3b82f6;
+  --feature-tasks: #f59e0b;
+  --feature-cto: #ec4899;
+
+  /* AI Provider Brand Logos */
+  --brand-claude: #d97757;
+  --brand-antigravity-1: #38bdf8;
+  --brand-antigravity-2: #3b82f6;
+  --brand-antigravity-3: #a855f7;
+  --brand-antigravity-4: #f43f5e;
+  --brand-codex: #10a37f;
+  --brand-xia: #ec4899;
+
+  /* Overlay & shadow */
+  --overlay-bg: #00000099;
+  --shadow-strong: #00000066;
+
+  /* Opaque bases for building an overlay at a specific strength.
+     `--overlay-bg` is the standard scrim; these two are for the surfaces where the
+     strength is the point (a 75% modal scrim over the emulator switcher, a 20% hairline
+     on top of an accent fill). Pair them with a Tailwind opacity modifier —
+     `bg-[var(--scrim-base)]/75` — so the rendered alpha is chosen at the call site
+     while the colour itself stays owned here. */
+  --scrim-base: #000000;
+  --overlay-ink: #ffffff;
+
+  /* Paper for content the app does not paint: an embedded web page, a remote HTML
+     artifact, an exported document. Deliberately not themed — a remote page has to
+     look the same whatever the AGMon theme is, so this stays identical across themes. */
+  --surface-document: #ffffff;
+
+  /* Terminal chrome — aliased from surface tokens so it tracks every theme.
+     Selection stays a literal so xterm/Pixi consumers can parse it directly. */
+  --term-bg: var(--bg-editor);
+  --term-fg: var(--text-main);
+  --term-cursor: var(--accent-primary);
+  --term-cursor-accent: var(--bg-editor);
+  --term-selection: #3fb9844d;
+
+  /* ANSI 16. Shared by every dark theme; light-plus overrides below. */
+  --ansi-black: #1e2430;
+  --ansi-red: #f0616f;
+  --ansi-green: #3fb984;
+  --ansi-yellow: #d9a441;
+  --ansi-blue: #5b9cf8;
+  --ansi-magenta: #c98bf0;
+  --ansi-cyan: #45b8c4;
+  --ansi-white: #c8cdd6;
+  --ansi-bright-black: #4a5563;
+  --ansi-bright-red: #ff7b85;
+  --ansi-bright-green: #58c896;
+  --ansi-bright-yellow: #e8bd5c;
+  --ansi-bright-blue: #7bb0fa;
+  --ansi-bright-magenta: #dda5f5;
+  --ansi-bright-cyan: #5fcbd6;
+  --ansi-bright-white: #f2f5f8;
+
+  /* PixiJS office scene — only the renderer surface follows the app theme.
+     Floor/grid/rack/panel colours belong to the office-environment catalogue. */
+  --scene-canvas-bg: #0b0f16;
+
+  /* Syntax Highlighting Tokens (Dark Default — VS Code Dark+ / Geist Dark) */
+  --syntax-comment: #6a737d;
+  --syntax-keyword: #ff7b72;
+  --syntax-control: #c586c0;
+  --syntax-string: #a5d6ff;
+  --syntax-number: #79c0ff;
+  --syntax-boolean: #569cd6;
+  --syntax-function: #d2a8ff;
+  --syntax-type: #4ec9b0;
+  --syntax-tag: #7ee787;
+  --syntax-attr-name: #9cdcfe;
+  --syntax-property: #9cdcfe;
+  --syntax-operator: #ff7b72;
+  --syntax-punctuation: #a1a1aa;
+  --syntax-regex: #f2cc60;
+}
+
+/* Signature Theme 1 (Default): Vercel Geist Monochrome */
+[data-theme="vercel-geist"] {
+  --bg-workbench: #09090b;
+  --bg-editor: #0c0c0e;
+  --bg-sidebar: #111114;
+  --bg-activitybar: #09090b;
+  --bg-titlebar: #0c0c0e;
+  --bg-statusbar: #09090b;
+  --bg-card: #18181b;
+  --bg-card-inner: #121215;
+  --bg-hover: #222226;
+  --bg-selection: #303036;
+  --border-subtle: #222225;
+  --border-card: #2c2c30;
+  --border-focus: #a1a1aa;
+  --accent-primary: #ededef;
+  --accent-hover: #d4d4d8;
+  --accent-secondary: #a1a1aa;
+  --text-main: #d4d4d8;
+  --text-muted: #71717a;
+  --text-bright: #fafafa;
+  --text-on-accent: #09090b;
+
+  --bg-chat-user: #18181b;
+  --border-chat-user: #2c2c30;
+  --text-chat-user: #a1a1aa;
+  --text-chat-user-body: #fafafa;
+  --bg-chat-agent: #121215;
+  --border-chat-agent: #222225;
+  --bg-chat-tool: #0d0d10;
+  --border-chat-tool: #202023;
+  --bg-chat-code: #09090b;
+  --text-chat-code: #e4e4e7;
+  --bg-input: #141417;
+}
+
+/* Signature Theme 2: Linear Carbon & Slate */
+[data-theme="linear-carbon"],
+[data-theme="dark-plus"] {
+  --bg-workbench: #0e0f11;
+  --bg-editor: #121417;
+  --bg-sidebar: #16181d;
+  --bg-activitybar: #0e0f11;
+  --bg-titlebar: #121417;
+  --bg-statusbar: #0e0f11;
+  --bg-card: #1b1e24;
+  --bg-card-inner: #14161b;
+  --bg-hover: #22262e;
+  --bg-selection: #2a2f3a;
+  --border-subtle: #22252d;
+  --border-card: #2a2e38;
+  --border-focus: #5e6ad2;
+  --accent-primary: #5e6ad2;
+  --accent-hover: #4f5bc2;
+  --accent-secondary: #7a85e3;
+  --text-main: #d1d5db;
+  --text-muted: #8a8f98;
+  --text-bright: #f3f4f6;
+  --text-on-accent: #ffffff;
+
+  --bg-chat-user: #1b1e26;
+  --border-chat-user: #2d3240;
+  --text-chat-user: #9ca3af;
+  --text-chat-user-body: #f3f4f6;
+  --bg-chat-agent: #15171c;
+  --border-chat-agent: #232730;
+  --bg-chat-tool: #111317;
+  --border-chat-tool: #22252d;
+  --bg-chat-code: #0c0d10;
+  --text-chat-code: #e5e7eb;
+  --bg-input: #16181d;
+}
+
+/* Signature Theme 3: Warm Obsidian & Copper */
+[data-theme="warm-obsidian"] {
+  --bg-workbench: #11100f;
+  --bg-editor: #161514;
+  --bg-sidebar: #1b1917;
+  --bg-activitybar: #11100f;
+  --bg-titlebar: #161514;
+  --bg-statusbar: #11100f;
+  --bg-card: #22201d;
+  --bg-card-inner: #181715;
+  --bg-hover: #2a2724;
+  --bg-selection: #35312d;
+  --border-subtle: #282522;
+  --border-card: #332f2b;
+  --border-focus: #d97757;
+  --accent-primary: #d97757;
+  --accent-hover: #c46546;
+  --accent-secondary: #e59578;
+  --text-main: #d6d2cc;
+  --text-muted: #968f87;
+  --text-bright: #f5f2eb;
+  --text-on-accent: #ffffff;
+
+  --bg-chat-user: #24211e;
+  --border-chat-user: #38332e;
+  --text-chat-user: #d97757;
+  --text-chat-user-body: #f5f2eb;
+  --bg-chat-agent: #1a1816;
+  --border-chat-agent: #2b2824;
+  --bg-chat-tool: #141311;
+  --border-chat-tool: #262320;
+  --bg-chat-code: #0f0e0d;
+  --text-chat-code: #e7e3dc;
+  --bg-input: #1b1917;
+}
+
+/* Signature Theme 4: Zed Graphite & Sage */
+[data-theme="zed-graphite"] {
+  --bg-workbench: #121517;
+  --bg-editor: #171b1e;
+  --bg-sidebar: #1b2024;
+  --bg-activitybar: #121517;
+  --bg-titlebar: #171b1e;
+  --bg-statusbar: #121517;
+  --bg-card: #21272c;
+  --bg-card-inner: #171b1e;
+  --bg-hover: #283036;
+  --bg-selection: #313b42;
+  --border-subtle: #252c32;
+  --border-card: #2f3840;
+  --border-focus: #3fb984;
+  --accent-primary: #3fb984;
+  --accent-hover: #329f6f;
+  --accent-secondary: #58c896;
+  --text-main: #cbd2d9;
+  --text-muted: #7e8b96;
+  --text-bright: #ecf0f3;
+  --text-on-accent: #0d1512;
+
+  --bg-chat-user: #1f262b;
+  --border-chat-user: #2f3942;
+  --text-chat-user: #58c896;
+  --text-chat-user-body: #ecf0f3;
+  --bg-chat-agent: #191e22;
+  --border-chat-agent: #272f35;
+  --bg-chat-tool: #14181b;
+  --border-chat-tool: #242b31;
+  --bg-chat-code: #101315;
+  --text-chat-code: #dbe1e6;
+  --bg-input: #1b2024;
+}
+
+/* 1. One Dark Pro */
+[data-theme="one-dark-pro"] {
+  --bg-workbench: #1e2227;
+  --bg-editor: #282c34;
+  --bg-sidebar: #21252b;
+  --bg-activitybar: #1e2227;
+  --bg-titlebar: #21252b;
+  --bg-statusbar: #21252b;
+  --bg-card: #21252b;
+  --bg-card-inner: #282c34;
+  --bg-hover: #2c313a;
+  --bg-selection: #3e4451;
+  --border-subtle: #181a1f;
+  --border-card: #353b45;
+  --border-focus: #61afef;
+  --accent-primary: #61afef;
+  --accent-hover: #4d9fe4;
+  --accent-secondary: #56b6c2;
+  --text-main: #abb2bf;
+  --text-muted: #7f848e;
+  --text-bright: #e5e5e5;
+  --text-on-accent: #ffffff;
+
+  /* Chat Semantics */
+  --bg-chat-user: #21252b;
+  --border-chat-user: #353b45;
+  --text-chat-user: #61afef;
+  --text-chat-user-body: #e5e5e5;
+  --bg-chat-agent: #282c34;
+  --border-chat-agent: #353b45;
+  --bg-chat-tool: #1e2227;
+  --border-chat-tool: #2c313a;
+  --bg-chat-code: #1e2227;
+  --text-chat-code: #abb2bf;
+  --bg-input: #21252b;
+}
+
+/* 2. Tokyo Night */
+[data-theme="tokyo-night"] {
+  --bg-workbench: #16161e;
+  --bg-editor: #1a1b26;
+  --bg-sidebar: #16161e;
+  --bg-activitybar: #16161e;
+  --bg-titlebar: #16161e;
+  --bg-statusbar: #1f2335;
+  --bg-card: #1f2335;
+  --bg-card-inner: #16161e;
+  --bg-hover: #283457;
+  --bg-selection: #33467c;
+  --border-subtle: #292e42;
+  --border-card: #292e42;
+  --border-focus: #7aa2f7;
+  --accent-primary: #7aa2f7;
+  --accent-hover: #5d89f0;
+  --accent-secondary: #7dcfff;
+  --text-main: #a9b1d6;
+  --text-muted: #787c99;
+  --text-bright: #c0caf5;
+  --text-on-accent: #ffffff;
+
+  /* Chat Semantics */
+  --bg-chat-user: #1f2335;
+  --border-chat-user: #292e42;
+  --text-chat-user: #7aa2f7;
+  --text-chat-user-body: #c0caf5;
+  --bg-chat-agent: #1a1b26;
+  --border-chat-agent: #292e42;
+  --bg-chat-tool: #16161e;
+  --border-chat-tool: #292e42;
+  --bg-chat-code: #13141c;
+  --text-chat-code: #a9b1d6;
+  --bg-input: #1f2335;
+}
+
+/* 3. GitHub Dark */
+[data-theme="github-dark"] {
+  --bg-workbench: #0d1117;
+  --bg-editor: #0d1117;
+  --bg-sidebar: #161b22;
+  --bg-activitybar: #010409;
+  --bg-titlebar: #161b22;
+  --bg-statusbar: #161b22;
+  --bg-card: #161b22;
+  --bg-card-inner: #0d1117;
+  --bg-hover: #21262d;
+  --bg-selection: #1f6feb;
+  --border-subtle: #21262d;
+  --border-card: #30363d;
+  --border-focus: #2f81f7;
+  --accent-primary: #2f81f7;
+  --accent-hover: #1f6feb;
+  --accent-secondary: #58a6ff;
+  --text-main: #c9d1d9;
+  --text-muted: #8b949e;
+  --text-bright: #f0f6fc;
+  --text-on-accent: #ffffff;
+
+  /* Chat Semantics */
+  --bg-chat-user: #161b22;
+  --border-chat-user: #30363d;
+  --text-chat-user: #58a6ff;
+  --text-chat-user-body: #f0f6fc;
+  --bg-chat-agent: #161b22;
+  --border-chat-agent: #30363d;
+  --bg-chat-tool: #0d1117;
+  --border-chat-tool: #21262d;
+  --bg-chat-code: #0a0c10;
+  --text-chat-code: #c9d1d9;
+  --bg-input: #0d1117;
+}
+
+/* 4. Monokai Pro */
+[data-theme="monokai-pro"] {
+  --bg-workbench: #19181a;
+  --bg-editor: #221f22;
+  --bg-sidebar: #2d2a2e;
+  --bg-activitybar: #19181a;
+  --bg-titlebar: #19181a;
+  --bg-statusbar: #2d2a2e;
+  --bg-card: #2d2a2e;
+  --bg-card-inner: #221f22;
+  --bg-hover: #3b383d;
+  --bg-selection: #49464e;
+  --border-subtle: #403e41;
+  --border-card: #403e41;
+  --border-focus: #ffd866;
+  --accent-primary: #ffd866;
+  --accent-hover: #e6be4d;
+  --accent-secondary: #78dce8;
+  --text-main: #fcfcfa;
+  --text-muted: #939293;
+  --text-bright: #ffffff;
+  --text-on-accent: #19181a;
+
+  /* Chat Semantics */
+  --bg-chat-user: #2d2a2e;
+  --border-chat-user: #403e41;
+  --text-chat-user: #ffd866;
+  --text-chat-user-body: #fcfcfa;
+  --bg-chat-agent: #221f22;
+  --border-chat-agent: #403e41;
+  --bg-chat-tool: #19181a;
+  --border-chat-tool: #403e41;
+  --bg-chat-code: #171618;
+  --text-chat-code: #fcfcfa;
+  --bg-input: #2d2a2e;
+}
+
+/* 5. Light+ (Daylight Paper) */
+[data-theme="light-plus"] {
+  color-scheme: light;
+  --bg-workbench: #f3f3f3;
+  --bg-editor: #ffffff;
+  --bg-sidebar: #f8f8f8;
+  --bg-activitybar: #2c2c2c;
+  --bg-titlebar: #e5e7eb;
+  --bg-statusbar: #18181b;
+  --bg-card: #ffffff;
+  --bg-card-inner: #f9fafb;
+  --bg-hover: #e8e8e8;
+  --bg-selection: #e0e7ff;
+  --border-subtle: #e5e7eb;
+  --border-card: #d4d4d8;
+  --border-focus: #4f46e5;
+  --accent-primary: #4f46e5;
+  --accent-hover: #4338ca;
+  --accent-secondary: #6366f1;
+  --text-main: #24292f;
+  --text-muted: #6e7781;
+  --text-bright: #09090b;
+  --text-on-accent: #ffffff;
+
+  /* Chat Semantics for Light Mode */
+  --bg-chat-user: #f4f4f5;
+  --border-chat-user: #d4d4d8;
+  --text-chat-user: #4f46e5;
+  --text-chat-user-body: #0f172a;
+  --bg-chat-agent: #ffffff;
+  --border-chat-agent: #e2e8f0;
+  --bg-chat-tool: #f8fafc;
+  --border-chat-tool: #e2e8f0;
+  --bg-chat-code: #f1f5f9;
+  --text-chat-code: #0f172a;
+  --bg-input: #ffffff;
+
+  /* Destructive / validation */
+  --danger: #cf222e;
+  --danger-bg: #cf222e14;
+  --danger-border: #cf222e40;
+
+  /* Image canvas */
+  --canvas-backdrop: #f6f8fa;
+  --canvas-checker: #eaeef2;
+
+  /* Informational */
+  --info: #0969da;
+  --info-bg: #0969da14;
+  --info-bg-hover: #0969da24;
+  --info-border: #0969da40;
+
+  /* Status hues are tuned per polarity — the dark-theme values fall below
+     4.5:1 on Light+ paper surfaces and are used for status *text*, not just dots. */
+  --status-running: #1a7f37;
+  --status-running-bg: rgba(26, 127, 55, 0.12);
+  --status-running-border: rgba(26, 127, 55, 0.28);
+  --status-warning: #8a5b00;
+  --status-warning-bg: rgba(138, 91, 0, 0.12);
+  --status-warning-border: rgba(138, 91, 0, 0.28);
+  --status-error: #cf222e;
+  --status-error-bg: rgba(207, 34, 46, 0.12);
+  --status-error-border: rgba(207, 34, 46, 0.28);
+  --status-idle: #57606a;
+  --status-idle-bg: rgba(87, 96, 106, 0.12);
+
+  /* File Explorer Git Decoration Tokens (Light+ override) */
+  --git-decoration-added: #587c0c;
+  --git-decoration-modified: #895503;
+  --git-decoration-deleted: #ad0707;
+  --git-decoration-renamed: #007acc;
+  --git-decoration-untracked: #007100;
+  --git-decoration-copied: #007acc;
+  --git-decoration-ignored: #8c8c8c;
+
+  /* Overlay & shadow */
+  --overlay-bg: #0f172a4d;
+  --shadow-strong: #0f172a1f;
+
+  /* Terminal — Light+ overrides the shared ANSI set for contrast on white */
+  --term-selection: #4f46e52e;
+
+  --ansi-black: #24292f;
+  --ansi-red: #cf222e;
+  --ansi-green: #1a7f37;
+  --ansi-yellow: #9a6700;
+  --ansi-blue: #0969da;
+  --ansi-magenta: #8250df;
+  --ansi-cyan: #1b7c83;
+  --ansi-white: #6e7781;
+  --ansi-bright-black: #57606a;
+  --ansi-bright-red: #a40e26;
+  --ansi-bright-green: #1a7f37;
+  --ansi-bright-yellow: #633c01;
+  --ansi-bright-blue: #218bff;
+  --ansi-bright-magenta: #a475f9;
+  --ansi-bright-cyan: #3192aa;
+  --ansi-bright-white: #24292f;
+
+  --scene-canvas-bg: #ebebeb;
+
+  /* Syntax Highlighting Tokens (Light+ Override — VS Code Light+ / GitHub Light) */
+  --syntax-comment: #6e7781;
+  --syntax-keyword: #cf222e;
+  --syntax-control: #8250df;
+  --syntax-string: #0a3069;
+  --syntax-number: #0550ae;
+  --syntax-boolean: #0550ae;
+  --syntax-function: #8250df;
+  --syntax-type: #116329;
+  --syntax-tag: #116329;
+  --syntax-attr-name: #0550ae;
+  --syntax-property: #0550ae;
+  --syntax-operator: #cf222e;
+  --syntax-punctuation: #57606a;
+  --syntax-regex: #953800;
+}
+
+html {
+  font-family: var(--font-family-ui);
+  font-size: var(--font-size-ui);
+}
+
+body {
+  background: var(--bg-workbench);
+  color: var(--text-main);
+  font-family: var(--font-family-ui);
+  font-size: var(--font-size-ui);
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Ensure all interactive controls and form inputs inherit global font and size */
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: var(--accent-primary);
+}
+
+/* Unified IDE Workbench Typography:
+   All UI chrome (.font-mono, kbd, badges, counters, file trees, status items)
+   uses the single active UI font with tabular numerals so numbers align cleanly
+   without introducing a second clashing font style across the interface. */
+.font-mono,
+kbd {
+  font-family: var(--font-family-ui) !important;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Code & terminal content elements strictly use --font-family-mono */
+.font-code,
+pre,
+code,
+samp {
+  font-family: var(--font-family-mono) !important;
+}
+
+/* UI Sans elements strictly use --font-family-ui */
+.font-sans {
+  font-family: var(--font-family-ui) !important;
+}
+
+/* Per-Zone Font Size Scoping (VS Code Standard 5-Zone Architecture) */
+[data-font-zone="toolbar"] {
+  --font-size-ui: var(--font-size-toolbar, 12px);
+  font-size: var(--font-size-toolbar, 12px);
+}
+[data-font-zone="sidebar"] {
+  --font-size-ui: var(--font-size-sidebar, 13px);
+  font-size: var(--font-size-sidebar, 13px);
+}
+[data-font-zone="editor"] {
+  --font-size-ui: var(--font-size-editor, 13px);
+  font-size: var(--font-size-editor, 13px);
+}
+[data-font-zone="terminal"] {
+  --font-size-ui: var(--font-size-terminal, 13px);
+  font-size: var(--font-size-terminal, 13px);
+}
+[data-font-zone="chat"] {
+  --font-size-ui: var(--font-size-chat, 13px);
+  font-size: var(--font-size-chat, 13px);
+}
+
+/* Unified proportional font-size scaling across all UI panels, bars, editors, and modals (13px baseline = 1.0x) */
+.text-\[8px\] {
+  font-size: calc(var(--font-size-ui, 13px) * 8 / 13) !important;
+}
+.text-\[8\.5px\] {
+  font-size: calc(var(--font-size-ui, 13px) * 8.5 / 13) !important;
+}
+.text-\[9px\] {
+  font-size: calc(var(--font-size-ui, 13px) * 9 / 13) !important;
+}
+.text-\[9\.5px\] {
+  font-size: calc(var(--font-size-ui, 13px) * 9.5 / 13) !important;
+}
+.text-\[10px\] {
+  font-size: calc(var(--font-size-ui, 13px) * 10 / 13) !important;
+}
+.text-\[10\.5px\] {
+  font-size: calc(var(--font-size-ui, 13px) * 10.5 / 13) !important;
+}
+.text-\[11px\] {
+  font-size: calc(var(--font-size-ui, 13px) * 11 / 13) !important;
+}
+.text-\[11\.5px\] {
+  font-size: calc(var(--font-size-ui, 13px) * 11.5 / 13) !important;
+}
+.text-\[12px\],
+.text-xs {
+  font-size: calc(var(--font-size-ui, 13px) * 12 / 13) !important;
+}
+.text-\[12\.5px\] {
+  font-size: calc(var(--font-size-ui, 13px) * 12.5 / 13) !important;
+}
+.text-\[13px\] {
+  font-size: var(--font-size-ui, 13px) !important;
+}
+.text-\[14px\],
+.text-sm {
+  font-size: calc(var(--font-size-ui, 13px) * 14 / 13) !important;
+}
+.text-\[15px\] {
+  font-size: calc(var(--font-size-ui, 13px) * 15 / 13) !important;
+}
+.text-\[16px\],
+.text-base {
+  font-size: calc(var(--font-size-ui, 13px) * 16 / 13) !important;
+}
+.text-lg {
+  font-size: calc(var(--font-size-ui, 13px) * 18 / 13) !important;
+}
+.text-xl {
+  font-size: calc(var(--font-size-ui, 13px) * 20 / 13) !important;
+}
+.text-2xl {
+  font-size: calc(var(--font-size-ui, 13px) * 24 / 13) !important;
+}
+
+/* Legacy colour shims retired.
+ *
+ * This block used to remap hardcoded Tailwind arbitrary classes (bg-[#181818],
+ * text-slate-400, bg-cyan-600, ...) onto theme tokens. Every component now references a
+ * token directly, so the shims no longer had any selector to match and only obscured which
+ * colours the app actually uses. New colours must be added as a token and referenced by
+ * name — not reintroduced here.
+ */
+
+/* Light mode selection and input styling */
+[data-theme="light-plus"] select {
+  background-color: var(--bg-card) !important;
+  color: var(--text-main) !important;
+  border-color: var(--border-card) !important;
+}
+
+[data-theme="light-plus"] select option {
+  background-color: var(--bg-card) !important;
+  color: var(--text-main) !important;
+}
+
+/* Global cursor: pointer for all buttons, interactive controls, and action elements */
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]),
+input[type="button"]:not(:disabled),
+input[type="submit"]:not(:disabled),
+input[type="reset"]:not(:disabled),
+input[type="checkbox"]:not(:disabled),
+input[type="radio"]:not(:disabled),
+select:not(:disabled),
+summary,
+a,
+label:has(input),
+label[for] {
+  cursor: pointer;
+}
+
+/* Disabled elements display not-allowed cursor */
+button:disabled,
+[role="button"][aria-disabled="true"],
+input:disabled,
+select:disabled {
+  cursor: not-allowed;
+}
+
+/* Smooth custom scrollbar for workbench panes */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-card);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--bg-hover);
+}
+
+/* Hide scrollbars on horizontal chip/tab strips while preserving scrollability */
+.no-scrollbar,
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar,
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+/* driver.js Interactive Tour Popover Theme Synchronization */
+.driver-popover.agmon-driver-popover {
+  background-color: var(--bg-sidebar) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--border-card) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 20px 45px var(--shadow-strong) !important;
+  padding: 14px 16px !important;
+  min-width: 340px !important;
+  max-width: min(420px, calc(100vw - 24px)) !important;
+  font-family: inherit !important;
+  pointer-events: auto !important;
+  z-index: 1000010000 !important;
+}
+
+.driver-popover.agmon-driver-popover .driver-popover-title {
+  color: var(--text-bright) !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  line-height: 1.35 !important;
+  margin-bottom: 6px !important;
+}
+
+.driver-popover.agmon-driver-popover .driver-popover-description {
+  color: var(--text-muted) !important;
+  font-size: 12px !important;
+  line-height: 1.5 !important;
+}
+
+.driver-popover.agmon-driver-popover .driver-popover-progress-text {
+  color: var(--text-muted) !important;
+  font-size: 11px !important;
+  font-family: var(--font-family-ui) !important;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap !important;
+  margin-right: 8px !important;
+}
+
+.driver-popover.agmon-driver-popover .driver-popover-prev-btn {
+  background-color: var(--bg-card) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--border-card) !important;
+  border-radius: 6px !important;
+  padding: 5px 10px !important;
+  font-size: 11px !important;
+  white-space: nowrap !important;
+  text-shadow: none !important;
+}
+
+.driver-popover.agmon-driver-popover .driver-popover-next-btn,
+.driver-popover.agmon-driver-popover .driver-popover-close-btn-text {
+  background-color: var(--accent-primary) !important;
+  color: var(--text-on-accent) !important;
+  border: 1px solid var(--accent-primary) !important;
+  border-radius: 6px !important;
+  padding: 5px 12px !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+  text-shadow: none !important;
+}
+
+.driver-popover.agmon-driver-popover .driver-popover-close-btn {
+  color: var(--text-muted) !important;
+}
+.driver-popover.agmon-driver-popover .driver-popover-close-btn:hover {
+  color: var(--text-bright) !important;
+}
+
+.driver-popover.agmon-driver-popover .agmon-driver-skip-btn {
+  background-color: transparent !important;
+  color: var(--text-muted) !important;
+  border: 1px dashed var(--border-card) !important;
+  border-radius: 6px !important;
+  padding: 4px 8px !important;
+  font-size: 10.5px !important;
+  font-weight: 500 !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
+  margin-right: 8px !important;
+  transition: all 0.15s ease !important;
+}
+.driver-popover.agmon-driver-popover .agmon-driver-skip-btn:hover {
+  color: var(--text-bright) !important;
+  border-color: var(--accent-primary) !important;
+  background-color: var(--bg-hover) !important;
+}
+
+/* Electron Native Frameless Window Drag & Drop Region */
+.titlebar-drag-region {
+  -webkit-app-region: drag;
+  user-select: none;
+}
+
+.titlebar-no-drag,
+.titlebar-no-drag *,
+.titlebar-drag-region button,
+.titlebar-drag-region button *,
+.titlebar-drag-region input,
+.titlebar-drag-region select,
+.titlebar-drag-region textarea,
+.titlebar-drag-region [role="button"],
+.titlebar-drag-region [role="button"] *,
+.titlebar-drag-region a,
+.titlebar-drag-region a *,
+.titlebar-drag-region .cursor-pointer,
+.titlebar-drag-region .cursor-pointer *,
+.titlebar-drag-region [data-no-drag],
+.titlebar-drag-region [data-no-drag] * {
+  -webkit-app-region: no-drag;
+}
+
+/* Chat Turn Cards & Markdown Prose Word-Break Containment (Mobile & Desktop) */
+.chat-turn-row {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.chat-turn-card {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.chat-user-body,
+.chat-markdown,
+.markdown-prose {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: normal;
+  line-height: 1.65;
+}
+
+.markdown-prose > :first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-prose > :last-child {
+  margin-bottom: 0 !important;
+}
+
+.markdown-prose p,
+.markdown-prose li,
+.markdown-prose ul,
+.markdown-prose ol,
+.markdown-prose blockquote,
+.markdown-prose h1,
+.markdown-prose h2,
+.markdown-prose h3,
+.markdown-prose h4,
+.markdown-prose h5,
+.markdown-prose h6,
+.markdown-prose a {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.markdown-prose p {
+  margin-top: 0;
+  margin-bottom: 0.7rem;
+  line-height: 1.65;
+}
+
+.markdown-prose p:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-prose strong,
+.markdown-prose b {
+  color: var(--text-bright);
+  font-weight: 600;
+}
+
+.markdown-prose em,
+.markdown-prose i {
+  font-style: italic;
+}
+
+.markdown-prose del,
+.markdown-prose s {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.markdown-prose h1,
+.markdown-prose h2,
+.markdown-prose h3,
+.markdown-prose h4,
+.markdown-prose h5,
+.markdown-prose h6 {
+  color: var(--text-bright);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.markdown-prose h1 {
+  font-size: calc(var(--font-size-ui, 13px) * 18 / 13);
+  line-height: 1.35;
+  margin: 1.15rem 0 0.55rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.markdown-prose h2 {
+  font-size: calc(var(--font-size-ui, 13px) * 16 / 13);
+  line-height: 1.38;
+  margin: 1.05rem 0 0.5rem;
+}
+
+.markdown-prose h3 {
+  font-size: calc(var(--font-size-ui, 13px) * 14.5 / 13);
+  line-height: 1.42;
+  margin: 0.9rem 0 0.45rem;
+}
+
+.markdown-prose h4,
+.markdown-prose h5,
+.markdown-prose h6 {
+  font-size: calc(var(--font-size-ui, 13px) * 13.5 / 13);
+  line-height: 1.45;
+  margin: 0.75rem 0 0.35rem;
+}
+
+.markdown-prose ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin: 0.5rem 0 0.8rem;
+}
+
+.markdown-prose ul {
+  list-style-type: disc;
+  padding-left: 1.4rem;
+  margin: 0.4rem 0 0.7rem;
+}
+
+.markdown-prose ul ul,
+.markdown-prose ol ul {
+  list-style-type: disc;
+  margin-top: 0.35rem;
+  margin-bottom: 0.45rem;
+  padding-left: 1.35rem;
+}
+
+.markdown-prose ul ul ul,
+.markdown-prose ol ul ul {
+  list-style-type: circle;
+}
+
+.markdown-prose ol ol,
+.markdown-prose ul ol {
+  list-style-type: lower-alpha;
+  margin-top: 0.35rem;
+  margin-bottom: 0.45rem;
+  padding-left: 1.4rem;
+}
+
+.markdown-prose li {
+  margin: 0.35rem 0;
+  padding-left: 0.15rem;
+  line-height: 1.65;
+}
+
+.markdown-prose > ol > li {
+  margin: 0.65rem 0;
+}
+
+.markdown-prose ol > li::marker {
+  color: var(--text-bright);
+  font-weight: 600;
+}
+
+.markdown-prose ul > li::marker {
+  color: var(--text-muted);
+}
+
+.markdown-prose li > p {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.markdown-prose li input[type="checkbox"] {
+  margin-right: 0.45rem;
+  vertical-align: middle;
+  accent-color: var(--status-running);
+}
+
+.markdown-prose :not(pre) > code {
+  display: inline;
+  max-width: 100%;
+  font-family: var(--font-family-mono) !important;
+  font-size: 0.875em;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--text-bright);
+  background-color: color-mix(in srgb, var(--bg-selection) 65%, var(--bg-card));
+  border: 1px solid var(--border-card);
+  border-radius: 5px;
+  padding: 0.12em 0.42em;
+  margin: 0 0.06em;
+  white-space: nowrap;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+@media (max-width: 640px) {
+  .markdown-prose :not(pre) > code {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    box-decoration-break: slice;
+    -webkit-box-decoration-break: slice;
+  }
+}
+
+.markdown-prose a,
+.chat-action-link {
+  color: var(--syntax-number);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--syntax-number) 55%, transparent);
+  text-underline-offset: 2px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.15s ease, filter 0.15s ease, text-decoration-color 0.15s ease;
+}
+
+.markdown-prose a:hover,
+.chat-action-link:hover {
+  color: var(--syntax-number);
+  text-decoration: underline;
+  text-decoration-color: var(--syntax-number);
+  filter: brightness(1.15);
+}
+
+.markdown-prose a.chat-action-link:has(> code) {
+  text-decoration: none;
+}
+
+.markdown-prose a > code,
+.markdown-prose a code,
+a.chat-action-link > code {
+  color: var(--syntax-number) !important;
+  background-color: color-mix(in srgb, var(--syntax-number) 12%, var(--bg-card)) !important;
+  border-color: color-mix(in srgb, var(--syntax-number) 32%, var(--border-card)) !important;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, filter 0.15s ease;
+}
+
+.markdown-prose a:hover > code,
+.markdown-prose a:hover code,
+a.chat-action-link:hover > code {
+  background-color: color-mix(in srgb, var(--syntax-number) 20%, var(--bg-card)) !important;
+  border-color: color-mix(in srgb, var(--syntax-number) 55%, var(--border-card)) !important;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.markdown-prose blockquote {
+  margin: 0.65rem 0;
+  padding: 0.35rem 0.75rem 0.35rem 0.85rem;
+  border-left: 3px solid var(--border-focus);
+  color: var(--text-muted);
+  background-color: color-mix(in srgb, var(--bg-card) 45%, transparent);
+  border-radius: 0 6px 6px 0;
+}
+
+.markdown-prose hr {
+  border: 0;
+  border-top: 1px solid var(--border-card);
+  margin: 0.9rem 0;
+}
+
+.markdown-prose pre,
+.markdown-prose-code-block {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.markdown-prose pre {
+  margin: 0.65rem 0;
+  padding: 0.75rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-card);
+  background-color: var(--bg-chat-code);
+  color: var(--text-chat-code);
+  font-size: calc(var(--font-size-ui, 13px) * 12 / 13);
+  line-height: 1.55;
+}
+
+.markdown-prose table {
+  display: block;
+  width: max-content;
+  min-width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  margin: 0.75rem 0;
+  font-size: calc(var(--font-size-ui, 13px) * 12 / 13);
+  border-radius: 6px;
+}
+
+.markdown-prose th,
+.markdown-prose td {
+  border: 1px solid var(--border-card);
+  padding: 0.45rem 0.7rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.markdown-prose th {
+  background-color: var(--bg-card);
+  color: var(--text-bright);
+  font-weight: 600;
+}
+
+.markdown-prose tr:nth-child(even) td {
+  background-color: color-mix(in srgb, var(--bg-card) 35%, transparent);
+}
+
+.markdown-prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+}
+
+/* PrismJS Syntax Highlighting (Chat CodeBlocks, Markdown Preview & Native Code Editor) */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: var(--syntax-comment);
+  font-style: italic;
+}
+
+.token.punctuation {
+  color: var(--syntax-punctuation);
+}
+
+.token.namespace {
+  opacity: 0.85;
+}
+
+.token.property,
+.token.parameter,
+.token.variable {
+  color: var(--syntax-property);
+}
+
+.token.tag,
+.token.tag .token.class-name {
+  color: var(--syntax-tag);
+}
+
+.token.tag .token.punctuation {
+  color: var(--syntax-punctuation);
+}
+
+.token.attr-name {
+  color: var(--syntax-attr-name);
+}
+
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol {
+  color: var(--syntax-number);
+}
+
+.token.selector,
+.token.attr-value,
+.token.string,
+.token.char,
+.token.template-string {
+  color: var(--syntax-string);
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.token.arrow {
+  color: var(--syntax-operator);
+}
+
+.token.atrule,
+.token.keyword,
+.token.important,
+.token.storage {
+  color: var(--syntax-keyword);
+}
+
+.token.function,
+.token.function-variable,
+.token.method {
+  color: var(--syntax-function);
+}
+
+.token.class-name,
+.token.maybe-class-name,
+.token.builtin {
+  color: var(--syntax-type);
+}
+
+.token.regex {
+  color: var(--syntax-regex);
+}
+
+.token.inserted {
+  color: var(--status-running);
+}
+
+.token.deleted {
+  color: var(--status-error);
+}
+
+.token.bold {
+  font-weight: 600;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+/* Native Code Editor Overlay Selection & Caret */
+.agmon-code-editor-textarea {
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+  caret-color: var(--text-bright) !important;
+}
+
+.agmon-code-editor-textarea::selection {
+  background-color: color-mix(in srgb, var(--info) 32%, transparent);
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+
+
+
